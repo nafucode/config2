@@ -1,0 +1,8 @@
+{
+  "name": "config2",
+  "private": true,
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && cp -R elevator_configuration/. dist/ && find dist -name '.DS_Store' -delete",
+    "vercel-build": "npm run build"
+  }
+}
