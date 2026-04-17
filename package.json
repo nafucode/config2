@@ -1,0 +1,8 @@
+{
+  "name": "config2",
+  "private": true,
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist/images && cp index.html script.js style.css dist/ && cp -R images/. dist/images/ && find dist -name '.DS_Store' -delete",
+    "vercel-build": "npm run build"
+  }
+}
