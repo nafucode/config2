@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indonesia Elevator CRM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="login-logos">
+                <img src="assets/xinfuji-logo.svg" alt="Xinfuji">
+                <img src="assets/eravator-logo.png" alt="Eravator VA">
+            </div>
+            <h2>Indonesia CRM</h2>
+            <form id="login-form" autocomplete="on">
+                <input type="text" id="login-user" placeholder="Username" autocomplete="username" required>
+                <input type="password" id="login-pass" placeholder="Password" autocomplete="current-password" required>
+                <p id="login-error"></p>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>Indonesia CRM</h1>
+                <div class="brand-logos">
+                    <div class="brand-mark">
+                        <img src="assets/xinfuji-logo.svg" alt="Xinfuji Elevators and Escalators">
+                    </div>
+                    <div class="partner-mark">
+                        <img src="assets/eravator-logo.png" alt="Eravator VA">
+                    </div>
+                </div>
+            </div>
+
+            <nav class="nav-list" aria-label="CRM sections">
+                <button class="nav-item is-active" data-view="pipeline" data-i18n="navPipeline">Pipeline</button>
+                <button class="nav-item" data-view="customers" data-i18n="navCustomers">Customers</button>
+                <button class="nav-item" data-view="elevators" data-i18n="navElevators">Elevators</button>
+                <button class="nav-item" data-view="settings" data-i18n="navSharing">Sharing</button>
+            </nav>
+
+            <div class="sidebar-card">
+                <span class="status-dot" id="sync-dot"></span>
+                <div>
+                    <strong id="sync-title">Local mode</strong>
+                    <p id="sync-copy">Connect Supabase for shared access.</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow" data-i18n="workspace">Joint customer workspace</p>
+                    <h2 id="view-title">Pipeline</h2>
+                </div>
+                <div class="topbar-actions">
+                    <div class="language-switch" aria-label="Language switcher">
+                        <button type="button" data-lang="en">EN</button>
+                        <button type="button" data-lang="id">ID</button>
+                        <button type="button" data-lang="zh">中文</button>
+                    </div>
+                    <label class="search">
+                        <span data-i18n="search">Search</span>
+                        <input id="search-input" type="search" placeholder="Company, project, contact, city">
+                    </label>
+                    <button class="primary" id="new-deal" data-i18n="newDeal">New Deal</button>
+                </div>
+            </header>
+
+            <section class="metrics" aria-label="CRM summary">
+                <article>
+                    <span data-i18n="openValue">Open Value</span>
+                    <strong id="metric-open-value">$0</strong>
+                </article>
+                <article>
+                    <span data-i18n="activeCustomers">Active Customers</span>
+                    <strong id="metric-customers">0</strong>
+                </article>
+                <article>
+                    <span data-i18n="elevatorUnits">Elevator Units</span>
+                    <strong id="metric-units">0</strong>
+                </article>
+            </section>
+
+            <section class="toolbar">
+                <div class="segmented" id="status-tabs" aria-label="Order status filter"></div>
+                <select id="owner-filter" aria-label="Customer source filter">
+                    <option value="all">All sources</option>
+                    <option value="China Team">China Team</option>
+                    <option value="Indonesia Partner">Indonesia Partner</option>
+                    <option value="Joint">Joint</option>
+                </select>
+            </section>
+
+            <section id="content"></section>
+        </main>
+    </div>
+
+    <dialog id="deal-dialog">
+        <form method="dialog" id="deal-form">
+            <div class="dialog-head">
+                <div>
+                    <p class="eyebrow" data-i18n="crmRecord">CRM record</p>
+                    <h3 id="dialog-title">New Deal</h3>
+                </div>
+                <button class="icon-button" type="button" data-close-dialog aria-label="Close">x</button>
+            </div>
+
+            <input type="hidden" id="record-id">
+            <div class="form-grid">
+                <label>
+                    <span data-i18n="company">Company</span>
+                    <input id="company" required>
+                </label>
+                <label>
+                    <span data-i18n="contactPerson">Contact Person</span>
+                    <input id="contact">
+                </label>
+                <label>
+                    <span data-i18n="email">Email</span>
+                    <input id="email" type="email">
+                </label>
+                <label>
+                    <span data-i18n="phone">WhatsApp / Phone</span>
+                    <input id="phone">
+                </label>
+                <label>
+                    <span data-i18n="citySite">City / Site</span>
+                    <input id="city">
+                </label>
+                <label>
+                    <span data-i18n="projectNo">Project No.</span>
+                    <input id="project-no" placeholder="001">
+                </label>
+                <label>
+                    <span data-i18n="projectName">Project Name</span>
+                    <input id="project" required>
+                </label>
+                <label>
+                    <span data-i18n="elevatorType">Elevator Type</span>
+                    <select id="elevator-type">
+                        <option>Passenger Elevator</option>
+                        <option>Home Elevator</option>
+                        <option>Freight Elevator</option>
+                        <option>Hospital Elevator</option>
+                        <option>Observation Elevator</option>
+                        <option>Escalator / Moving Walk</option>
+                    </select>
+                </label>
+                <label>
+                    <span data-i18n="units">Units</span>
+                    <input id="units" type="number" min="1" value="1">
+                </label>
+                <label>
+                    <span data-i18n="capacity">Capacity</span>
+                    <input id="capacity" placeholder="1000 kg / 13 persons">
+                </label>
+                <label>
+                    <span data-i18n="stops">Stops</span>
+                    <input id="stops" placeholder="5 stops">
+                </label>
+                <label>
+                    <span data-i18n="speed">Speed</span>
+                    <input id="speed" placeholder="1.0 m/s">
+                </label>
+                <label>
+                    <span data-i18n="termsDestination">Terms / Destination</span>
+                    <input id="terms" placeholder="CIF - Port of Jakarta">
+                </label>
+                <label>
+                    <span data-i18n="quotationDate">Quotation Date</span>
+                    <input id="quotation-date" type="date">
+                </label>
+                <label>
+                    <span data-i18n="orderStatus">Order Status</span>
+                    <select id="status"></select>
+                </label>
+                <label>
+                    <span data-i18n="customerSource">Customer Source</span>
+                    <select id="owner">
+                        <option value="China Team">China Team</option>
+                        <option value="Indonesia Partner">Indonesia Partner</option>
+                        <option value="Joint">Joint</option>
+                    </select>
+                </label>
+                <label>
+                    <span data-i18n="contractValueUsd">Contract Value (USD)</span>
+                    <input id="value" type="number" min="0" step="100">
+                </label>
+                <label>
+                    <span data-i18n="commissionIncludedUsd">Commission Included (USD)</span>
+                    <input id="commission" type="number" min="0" step="50">
+                </label>
+                <label>
+                    <span data-i18n="nextFollowUp">Next Follow-up</span>
+                    <input id="next-follow-up" type="date">
+                </label>
+                <label class="full">
+                    <span data-i18n="notes">Notes</span>
+                    <textarea id="notes" rows="4" placeholder="Commercial notes, site requirements, payment terms, partner comments"></textarea>
+                </label>
+            </div>
+
+            <div class="dialog-actions">
+                <button class="danger" type="button" id="delete-record" data-i18n="delete">Delete</button>
+                <span></span>
+                <button class="secondary" type="button" data-close-dialog data-i18n="cancel">Cancel</button>
+                <button class="primary" id="save-record" value="default" data-i18n="saveRecord">Save Record</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="import-dialog">
+        <form method="dialog" id="import-form">
+            <div class="dialog-head">
+                <div>
+                    <p class="eyebrow" data-i18n="dataImport">Data import</p>
+                    <h3 data-i18n="importJson">Import JSON</h3>
+                </div>
+                <button class="icon-button" type="button" data-close-dialog aria-label="Close">x</button>
+            </div>
+            <textarea id="import-json" rows="12" placeholder="Paste exported CRM JSON here"></textarea>
+            <div class="dialog-actions">
+                <span></span>
+                <button class="secondary" type="button" data-close-dialog data-i18n="cancel">Cancel</button>
+                <button class="primary" id="import-save" value="default" data-i18n="import">Import</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="script.js"></script>
+</body>
+</html>
